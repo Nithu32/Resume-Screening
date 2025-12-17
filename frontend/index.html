@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume Screening Chatbot | AI Career Assistant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="main-header">
+            <div class="logo-container">
+                <i class="fas fa-robot logo-icon"></i>
+                <div>
+                    <h1 class="main-title">Resume Screening Chatbot</h1>
+                    <p class="tagline">AI-Powered Career Assistant & Resume Analyzer</p>
+                </div>
+            </div>
+            <div class="header-badge">
+                <i class="fas fa-star"></i>
+                <span>AI Powered</span>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <section class="card upload-section">
+                <div class="card-header">
+                    <h2><i class="fas fa-cloud-upload-alt"></i> Upload & Analyze Resume</h2>
+                    <p class="card-subtitle">Get instant feedback on your resume against any job description</p>
+                </div>
+                
+                <div class="file-upload-area" id="dropZone">
+                    <i class="fas fa-file-pdf upload-icon"></i>
+                    <p class="upload-text">Drag & drop your resume (PDF) or click to browse</p>
+                    <input type="file" id="resumeFile" accept=".pdf" class="file-input">
+                    <p class="file-info">Supported format: PDF only</p>
+                </div>
+                
+                <div class="job-desc-container">
+                    <label for="jobDesc" class="input-label">
+                        <i class="fas fa-briefcase"></i> Job Description
+                    </label>
+                    <textarea id="jobDesc" placeholder="Paste the job description here to analyze resume fit... 
+Example: 'Looking for a frontend developer with React, JavaScript, and CSS experience...'" rows="6"></textarea>
+                    <div class="char-count">Characters: <span id="charCount">0</span></div>
+                </div>
+                
+                <button class="primary-btn analyze-btn" onclick="uploadResume()">
+                    <i class="fas fa-chart-line"></i> Analyze Resume Match
+                </button>
+                
+                <div class="process-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <p>Upload Resume</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <p>Add Job Description</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <p>Get AI Analysis</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card result-section" id="result" style="display:none;">
+                <div class="card-header">
+                    <h2><i class="fas fa-chart-bar"></i> Analysis Results</h2>
+                    <div class="result-actions">
+                        <button class="icon-btn" title="Save Report">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="icon-btn" title="Share">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="result-content">
+                    <div class="result-card match-score">
+                        <div class="score-circle">
+                            <svg width="100" height="100">
+                                <circle cx="50" cy="50" r="40" class="score-bg"></circle>
+                                <circle cx="50" cy="50" r="40" class="score-progress" id="matchCircle"></circle>
+                            </svg>
+                            <div class="score-text">
+                                <span id="matchScore">0%</span>
+                                <small>Match</small>
+                            </div>
+                        </div>
+                        <h3>Job Fit Score</h3>
+                    </div>
+                    
+                    <div class="result-details">
+                        <div class="result-item">
+                            <div class="result-label">
+                                <i class="fas fa-user-tie"></i>
+                                <strong>Predicted Job Role:</strong>
+                            </div>
+                            <div class="result-value">
+                                <span id="jobRole" class="highlight-text">Software Developer</span>
+                            </div>
+                        </div>
+                        
+                        <div class="result-item">
+                            <div class="result-label">
+                                <i class="fas fa-check-circle"></i>
+                                <strong>Resume Skills:</strong>
+                            </div>
+                            <div class="result-value">
+                                <div class="skills-container" id="resumeSkills">
+                                    <span class="skill-tag">JavaScript</span>
+                                    <span class="skill-tag">React</span>
+                                    <span class="skill-tag">HTML/CSS</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="result-item">
+                            <div class="result-label">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <strong>Missing Skills:</strong>
+                            </div>
+                            <div class="result-value">
+                                <div class="skills-container missing" id="missingSkills">
+                                    <span class="skill-tag missing">Python</span>
+                                    <span class="skill-tag missing">Docker</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="result-item">
+                            <div class="result-label">
+                                <i class="fas fa-lightbulb"></i>
+                                <strong>Recommendations:</strong>
+                            </div>
+                            <div class="result-value">
+                                <p id="recommendations">Based on your skills, we recommend highlighting your JavaScript experience and considering learning Python to increase job match.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="result-footer">
+                    <p><i class="fas fa-clock"></i> Analysis generated: <span id="analysisTime">Just now</span></p>
+                </div>
+            </section>
+
+            <section class="card chat-section">
+                <div class="card-header">
+                    <h2><i class="fas fa-comments"></i> Career Assistant Chat</h2>
+                    <p class="card-subtitle">Ask questions about careers, resumes, or job search</p>
+                </div>
+                
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <div class="chatbot-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div>
+                            <h3>CareerBot Assistant</h3>
+                            <p class="status online"><i class="fas fa-circle"></i> Online & ready to help</p>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message bot">
+                            <div class="message-content">
+                                <p>Hello! I'm your Career Assistant. I can help with resume tips, career advice, interview preparation, and more. What would you like to know?</p>
+                            </div>
+                            <div class="message-time">Just now</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-area">
+                        <input type="text" id="chatQuestion" placeholder="Type your career question here...">
+                        <button class="primary-btn chat-btn" onclick="askChatbot()">
+                            <i class="fas fa-paper-plane"></i> Send
+                        </button>
+                    </div>
+                    
+                    <div class="quick-questions">
+                        <p>Try asking:</p>
+                        <div class="quick-buttons">
+                            <button class="quick-btn" data-question="How can I improve my resume?">Improve resume</button>
+                            <button class="quick-btn" data-question="What skills are in demand for software developers?">In-demand skills</button>
+                            <button class="quick-btn" data-question="How to prepare for a technical interview?">Interview prep</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-footer">
+                    <p><i class="fas fa-shield-alt"></i> Your conversations are private and secure</p>
+                </div>
+            </section>
+        </div>
+        
+        <footer class="main-footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-robot"></i>
+                    <span>Resume Screening AI</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-question-circle"></i> Help</a>
+                    <a href="#"><i class="fas fa-lock"></i> Privacy</a>
+                    <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+                </div>
+                <p class="copyright">© 2023 AI Career Assistant. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
