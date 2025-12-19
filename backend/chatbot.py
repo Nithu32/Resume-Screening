@@ -1,29 +1,15 @@
-def detect_intent(question):
-    question = question.lower()
+def generate_chat_response(question, job_role, missing_skills):
+    q = question.lower()
 
-    if "job" in question or "role" in question:
-        return "JOB_ROLE"
+    if "skill" in q or "learn" in q:
+        if missing_skills:
+            return f"For the role of {job_role}, you should focus on learning: {', '.join(missing_skills)}."
+        return "Your skills already match the job requirements well."
 
-    if "skill" in question or "learn" in question or "improve" in question:
-        return "SKILL_GAP"
+    if "resume" in q:
+        return "Tailor your resume to the job description and highlight relevant projects."
 
-    if "resume" in question:
-        return "RESUME_TIPS"
+    if "interview" in q:
+        return "Revise core concepts, practice problem-solving, and prepare explanations for your projects."
 
-    return "UNKNOWN"
-
-def generate_response(intent, context):
-    if intent == "JOB_ROLE":
-        return f"You are best suited for the role of {context['job_role']}."
-
-    if intent == "SKILL_GAP":
-        missing = context.get("missing_skills", [])
-        if not missing:
-            return "You currently meet most of the job requirements."
-        return "You should focus on learning: " + ", ".join(missing)
-
-    if intent == "RESUME_TIPS":
-        return "Try to include measurable achievements and highlight relevant skills clearly."
-
-    return "I can assist only with resume and career-related queries."
-
+    return "I can help with resume analysis, skill gaps, and interview preparation."
